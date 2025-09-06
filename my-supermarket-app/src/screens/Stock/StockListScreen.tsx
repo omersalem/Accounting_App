@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../types/navigation';
+import { useProductsStore } from '../../hooks/useProductsStore';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'StockList'>;
 
-const MOCK_STOCK = [
-  { id: '1', name: 'Milk', quantity: 15 },
-  { id: '2', name: 'Bread', quantity: 30 },
-  { id: '3', name: 'Eggs', quantity: 42 },
-];
-
 export default function StockListScreen() {
   const navigation = useNavigation<Nav>();
+  const { products, loading, error, loadProducts } = useProductsStore();
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   return (
     <View className="flex-1 bg-white p-6">
@@ -28,20 +28,25 @@ export default function StockListScreen() {
         />
       </View>
 
-      <FlatList
-        data={MOCK_STOCK}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-200" />}
-        renderItem={({ item }) => (
-          <View className="flex-row items-center justify-between py-3">
-            <Text className="text-base">{item.name}</Text>
-            <Text className="text-gray-600">Qty: {item.quantity}</Text>
-          </View>
-        )}
-        ListEmptyComponent={() => (
-          <Text className="text-center text-gray-500">No products found.</Text>
-        )}
-      />
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : error ? (
+        <Text>{error}</Text>
+      ) : products.length === 0 ? (
+        <Text className="text-center text-gray-500">No products found.</Text>
+      ) : (
+        <FlatList
+          data={products as any}
+          keyExtractor={(item: any) => item.productId}
+          ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-200" />}
+          renderItem={({ item }: any) => (
+            <View className="flex-row items-center justify-between py-3">
+              <Text className="text-base">{item.name}</Text>
+              <Text className="text-gray-600">Qty: {item.stock}</Text>
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 }
