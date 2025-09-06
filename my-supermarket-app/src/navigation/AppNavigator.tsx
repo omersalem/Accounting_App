@@ -3,8 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types/navigation';
 import POSScreen from '../screens/POS/POSScreen';
-import StockListScreen from '../screens/Stock/StockListScreen';
-import AddProductScreen from '../screens/Stock/AddProductScreen';
+import { StockListScreen, AddProductScreen } from '../screens/Stock';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
