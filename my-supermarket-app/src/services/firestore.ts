@@ -3,7 +3,6 @@ import {
   collection,
   doc,
   addDoc,
-  setDoc,
   getDocs,
   CollectionReference,
   DocumentReference,
@@ -26,22 +25,11 @@ export function docRef<T = unknown>(
   return doc(getDB(), colName, id) as DocumentReference<T>;
 }
 
-export function newDocRef<T = unknown>(colName: string): DocumentReference<T> {
-  return doc(collection(getDB(), colName)) as DocumentReference<T>;
-}
-
 export async function addDocTyped<T>(
   colRef: CollectionReference<T>,
   data: T
 ): Promise<DocumentReference<T>> {
   return addDoc(colRef, data);
-}
-
-export async function setDocTyped<T>(
-  ref: DocumentReference<T>,
-  data: T
-): Promise<void> {
-  return setDoc(ref, data);
 }
 
 export async function getDocsTyped<T>(

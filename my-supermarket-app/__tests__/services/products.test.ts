@@ -1,6 +1,11 @@
 import { listProducts, addProduct } from "../../src/services/products";
 import { Product } from "../../src/types/product";
 
+// Mock role as Admin so service-level RBAC permits writes
+jest.mock("../../src/hooks/useAuthStore", () => ({
+  useAuthStore: { getState: () => ({ role: "Admin" }) },
+}));
+
 jest.mock("../../src/services/firestore", () => ({
   col: jest.fn(() => ({})),
   addDocTyped: jest.fn(async (_col, data) => ({ id: "mock-id", ...data })),

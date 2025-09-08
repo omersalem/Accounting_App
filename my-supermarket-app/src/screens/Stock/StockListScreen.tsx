@@ -5,12 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../types/navigation';
 import { useProductsStore } from '../../hooks/useProductsStore';
+import { useAuthStore } from '../../hooks/useAuthStore';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'StockList'>;
 
 export default function StockListScreen() {
   const navigation = useNavigation<Nav>();
   const { products, loading, error, loadProducts } = useProductsStore();
+  const { role } = useAuthStore();
 
   useEffect(() => {
     loadProducts();
@@ -20,12 +22,16 @@ export default function StockListScreen() {
     <View className="flex-1 bg-white p-6">
       <View className="mb-4 flex-row items-center justify-between">
         <Text className="text-2xl font-bold">Stock</Text>
-        <PrimaryButton
-          title="Add Product"
-          className="bg-green-600"
-          onPress={() => navigation.navigate('AddProduct')}
-          testID="btn-add-product-from-list"
-        />
+        {role === 'Admin' ? (
+          <PrimaryButton
+            title="Add Product"
+            className="bg-green-600"
+            onPress={() => navigation.navigate('AddProduct')}
+            testID="btn-add-product-from-list"
+          />
+        ) : (
+          <Text className="text-gray-500">Staff role</Text>
+        )}
       </View>
 
       {loading ? (
