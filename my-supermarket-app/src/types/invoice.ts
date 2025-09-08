@@ -1,13 +1,20 @@
-import type { Product } from "./product";
+export type LineItem = {
+  readonly productId: string;
+  readonly name: string;
+  readonly price: number; // unit price
+  readonly qty: number;
+  readonly unit: string; // e.g., "kg", "pcs"
+};
+
+export type InvoiceStatus = 'PAID' | 'UNPAID';
 
 export type Invoice = {
   readonly invoiceId: string;
+  readonly invoiceNumber: string;
+  readonly customerId?: string;
   readonly date: string; // ISO string
-  readonly customerId: string;
-  readonly items: readonly {
-    readonly productId: string;
-    readonly quantity: number;
-    readonly price: number;
-  }[];
-  readonly total: number;
+  readonly items: readonly LineItem[];
+  readonly totalAmount: number;
+  readonly amountPaid: number;
+  readonly status: InvoiceStatus;
 };

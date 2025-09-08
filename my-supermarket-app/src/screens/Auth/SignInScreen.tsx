@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton';
 import { signInWithEmailPassword } from '../../services/auth';
 import { useAuthStore } from '../../hooks/useAuthStore';

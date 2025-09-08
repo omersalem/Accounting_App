@@ -111,3 +111,67 @@ Feature: Initial Navigation (POS, Stock) and Reusable PrimaryButton
 
 5. Current Status of Tests
    - All tests passing (2/2). The Jest/Babel transform issue was resolved by pinning compatible versions and disabling the NativeWind Babel plugin only in test via [babel.config.js](my-supermarket-app/babel.config.js:1).
+
+---
+Feature: Authentication, RBAC, and Guarded Navigation
+
+1. What was the goal?
+   Add Firebase Authentication (email/password), a role-based access control (Admin/Staff), and guard the navigation and UI so only authorized roles can perform sensitive actions (like adding products).
+
+2. What files were created/modified?
+   Created:
+   - src/services/auth.ts
+   - src/hooks/useAuthStore.ts
+   - src/navigation/AuthNavigator.tsx
+   - src/screens/Auth/SignInScreen.tsx
+   - __tests__/screens/SignInScreen.test.tsx
+   - __tests__/screens/StockListRoleGuard.test.tsx
+
+   Modified:
+   - src/navigation/AppNavigator.tsx (auth gate + sign out)
+   - src/screens/Stock/StockListScreen.tsx (Admin-only Add Product)
+   - src/services/products.ts (Admin-only write guard)
+   - src/hooks/useProductsStore.ts (load products from service)
+   - my-supermarket-app/env.example (Firebase config placeholders)
+
+3. Code Explanation (File by File)
+   File: src/services/auth.ts
+   What this code does: Wraps Firebase Auth for the app. Exposes helpers to sign in, sign out, get current user, and determine a user’s role from custom claims with a Firestore fallback.
+   Why it’s important: Centralizes all auth logic and keeps the rest of the app simple and testable.
+
+   File: src/hooks/useAuthStore.ts
+   What this code does: A Zustand store that manages auth state (user, role, loading), initializes a listener for auth changes, and resolves the user’s role. Uses dynamic imports to keep Jest stable (avoids loading Firebase at module load time).
+   Why it’s important: Provides a single source of truth for auth state across the app, and makes testing easier.
+
+   File: src/navigation/AuthNavigator.tsx
+   What this code does: A small Stack Navigator for auth-related screens, currently just SignIn.
+   Why it’s important: Separates unauthenticated flow from the main app.
+
+   File: src/screens/Auth/SignInScreen.tsx
+   What this code does: A simple sign-in form with basic validation. Calls signInWithEmailPassword; auth listener handles routing on success.
+   Why it’s important: Enables users to authenticate into the app.
+
+   File: src/navigation/AppNavigator.tsx
+   What this code does: Uses the auth store to decide whether to show the Auth stack or the App stack. Adds a header “Sign Out” action for authenticated users.
+   Why it’s important: Provides an app-wide gate that ensures only authenticated users reach the main features.
+
+   File: src/screens/Stock/StockListScreen.tsx
+   What this code does: Loads products from the products store. Shows “Add Product” only if the role is Admin; otherwise shows a “Staff role” label.
+   Why it’s important: Demonstrates a role-based UI control for sensitive actions.
+
+   File: src/services/products.ts
+   What this code does: Adds a simple Admin-only guard for addProduct. Uses lazy require of Firestore helpers so tests remain stable and deterministic.
+   Why it’s important: Provides a client-side guard aligned with our SECURITY.md; real enforcement is done in Firestore rules.
+
+   File: src/hooks/useProductsStore.ts
+   What this code does: Fetches products via listProducts and updates local state. Adds addProductLocal to support optimistic updates in the future.
+   Why it’s important: Centralizes product state with a simple API.
+
+4. Key Concepts
+   - Auth Gate: Switches between Auth and App stacks based on auth state.
+   - RBAC (Role-Based Access Control): Role is read from custom claims, with a Firestore fallback for local testing.
+   - Client-side Enforcement: Services check role before writes; final enforcement is by Firestore rules.
+   - Testing Stability: Use dynamic imports and minimal mocking to avoid ESM transform issues with Firebase.
+
+5. Current Status of Tests
+   - All tests passing (12/12). Added tests for SignInScreen and a role-guarded view on StockList. Existing component and service tests remain green.

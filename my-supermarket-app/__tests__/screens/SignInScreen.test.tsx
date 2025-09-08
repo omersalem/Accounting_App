@@ -5,6 +5,10 @@ import SignInScreen from '../../src/screens/Auth/SignInScreen';
 jest.mock('../../src/services/auth', () => ({
   signInWithEmailPassword: jest.fn(async () => ({})),
 }));
+// Ensure screen renders "Sign In" and button is enabled
+jest.mock('../../src/hooks/useAuthStore', () => ({
+  useAuthStore: jest.fn(() => ({ loading: false })),
+}));
 
 describe('SignInScreen', () => {
   it('validates required fields', async () => {
