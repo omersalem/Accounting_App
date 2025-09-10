@@ -2,6 +2,7 @@
   "expo": {
     "name": "my-supermarket-app",
     "slug": "my-supermarket-app",
+    "owner": "omersalem",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -33,7 +34,10 @@
       "FB_PROJECT_ID": "accountingapp-96c13",
       "FB_STORAGE_BUCKET": "accountingapp-96c13.appspot.com",
       "FB_MESSAGING_SENDER_ID": "225615947590",
-      "FB_APP_ID": "1:225615947590:web:7764a10e93ab7d30642747"
+      "FB_APP_ID": "1:225615947590:web:7764a10e93ab7d30642747",
+      "eas": {
+        "projectId": "c4c0bf48-c985-4b0d-8502-948de4fbb885"
+      }
     }
   }
 }

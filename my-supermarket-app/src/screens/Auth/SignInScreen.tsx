@@ -1,8 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton';
 import { signInWithEmailPassword } from '../../services/auth';
 import { useAuthStore } from '../../hooks/useAuthStore';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  title: {
+    marginBottom: 24,
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  errorText: {
+    marginBottom: 12,
+    textAlign: 'center',
+    color: '#dc2626',
+  },
+  formContainer: {
+    gap: 16,
+  },
+  fieldContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    marginBottom: 8,
+    fontSize: 16,
+  },
+  input: {
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+  buttonContainer: {
+    marginTop: 8,
+  },
+});
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
@@ -32,44 +76,45 @@ export default function SignInScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      className="flex-1 bg-white"
+      style={styles.container}
     >
-      <View className="flex-1 justify-center p-6">
-        <Text className="mb-6 text-center text-3xl font-bold">Welcome</Text>
+      <View style={styles.content}>
+        <Text style={styles.title}>Welcome</Text>
 
-        {err ? <Text className="mb-3 text-center text-red-600">{err}</Text> : null}
+        {err ? <Text style={styles.errorText}>{err}</Text> : null}
 
-        <View className="gap-4">
-          <View>
-            <Text className="mb-2 text-base">Email</Text>
+        <View style={styles.formContainer}>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.label}>Email</Text>
             <TextInput
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
               keyboardType="email-address"
               placeholder="you@example.com"
-              className="rounded-md border border-gray-300 px-4 py-3"
+              style={styles.input}
             />
           </View>
 
-          <View>
-            <Text className="mb-2 text-base">Password</Text>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.label}>Password</Text>
             <TextInput
               value={password}
               onChangeText={setPassword}
               secureTextEntry
               placeholder="••••••••"
-              className="rounded-md border border-gray-300 px-4 py-3"
+              style={styles.input}
             />
           </View>
 
-          <PrimaryButton
-            title={busy || loading ? 'Signing in...' : 'Sign In'}
-            onPress={onSignIn}
-            disabled={busy || loading}
-            testID="btn-sign-in"
-            className="mt-2"
-          />
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              title={busy || loading ? 'Signing in...' : 'Sign In'}
+              onPress={onSignIn}
+              disabled={busy || loading}
+              testID="btn-sign-in"
+            />
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>

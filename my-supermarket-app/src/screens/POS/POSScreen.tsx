@@ -1,9 +1,70 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, FlatList, Alert } from 'react-native';
+import { View, Text, FlatList, Alert, StyleSheet } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useNavigation } from '@react-navigation/native';
 import { useCartStore } from '../../hooks/useCartStore';
 import { createInvoice } from '../../services/invoices';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    padding: 24,
+  },
+  title: {
+    marginBottom: 16,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  successText: {
+    marginBottom: 8,
+    color: '#16a34a',
+  },
+  navRow: {
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cartHeader: {
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cartTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  totalText: {
+    fontSize: 18,
+  },
+  emptyText: {
+    color: '#6b7280',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  itemName: {
+    fontWeight: '500',
+  },
+  itemDetails: {
+    color: '#6b7280',
+  },
+  bottomRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+});
 
 export default function POSScreen() {
   const navigation = useNavigation();
@@ -42,12 +103,12 @@ export default function POSScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white p-6">
-      <Text className="mb-4 text-2xl font-bold">Point of Sale</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Point of Sale</Text>
 
-      {successMsg ? <Text className="mb-2 text-green-600">{successMsg}</Text> : null}
+      {successMsg ? <Text style={styles.successText}>{successMsg}</Text> : null}
 
-      <View className="mb-3 flex-row items-center justify-between">
+      <View style={styles.navRow}>
         <PrimaryButton
           title="Go to Stock List"
           onPress={() => navigation.navigate('StockList' as never)}
@@ -56,34 +117,34 @@ export default function POSScreen() {
         <PrimaryButton
           title="Add New Product"
           onPress={() => navigation.navigate('AddProduct' as never)}
-          className="bg-green-600"
+          className="bg-green"
           testID="btn-add-product"
         />
       </View>
 
-      <View className="mb-3 flex-row items-center justify-between">
-        <Text className="text-lg font-semibold">Cart</Text>
-        <Text className="text-lg">Total: {sum.toFixed(2)}</Text>
+      <View style={styles.cartHeader}>
+        <Text style={styles.cartTitle}>Cart</Text>
+        <Text style={styles.totalText}>Total: {sum.toFixed(2)}</Text>
       </View>
 
       {items.length === 0 ? (
-        <Text className="text-gray-500">No items in cart.</Text>
+        <Text style={styles.emptyText}>No items in cart.</Text>
       ) : (
         <FlatList
           data={items as any}
           keyExtractor={(it: any) => it.productId}
-          ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-200" />}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({ item }: any) => (
-            <View className="flex-row items-center justify-between py-2">
+            <View style={styles.itemContainer}>
               <View>
-                <Text className="font-medium">{item.name}</Text>
-                <Text className="text-gray-600">
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.itemDetails}>
                   {item.qty} x {item.price} {item.unit}
                 </Text>
               </View>
               <PrimaryButton
                 title="Remove"
-                className="bg-red-600"
+                className="bg-red"
                 onPress={() => removeItem(item.productId)}
               />
             </View>
@@ -91,8 +152,8 @@ export default function POSScreen() {
         />
       )}
 
-      <View className="mt-4 flex-row items-center justify-between">
-        <PrimaryButton title="Clear" className="bg-gray-500" onPress={() => clear()} />
+      <View style={styles.bottomRow}>
+        <PrimaryButton title="Clear" className="bg-gray" onPress={() => clear()} />
         <PrimaryButton
           title={busy ? 'Processing...' : 'Checkout'}
           onPress={onCheckout}

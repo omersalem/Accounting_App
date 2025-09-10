@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Text, TextInput, Platform, KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,6 +8,52 @@ import { addProduct } from '../../services/products';
 import { useProductsStore } from '../../hooks/useProductsStore';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'AddProduct'>;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  content: {
+    flex: 1,
+    padding: 24,
+  },
+  title: {
+    marginBottom: 16,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  errorText: {
+    marginBottom: 12,
+    color: '#dc2626',
+  },
+  formContainer: {
+    gap: 16,
+  },
+  fieldContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    marginBottom: 8,
+    fontSize: 16,
+  },
+  input: {
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+  buttonRow: {
+    marginTop: 24,
+    flexDirection: 'row',
+    gap: 12,
+  },
+});
 
 export default function AddProductScreen() {
   const navigation = useNavigation<Nav>();
@@ -55,73 +101,73 @@ export default function AddProductScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      className="flex-1 bg-white"
+      style={styles.container}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
-        <View className="flex-1 p-6">
-          <Text className="mb-4 text-2xl font-bold">Add Product</Text>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+        <View style={styles.content}>
+          <Text style={styles.title}>Add Product</Text>
 
-          {error ? <Text className="mb-3 text-red-600">{error}</Text> : null}
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-          <View className="gap-4">
-            <View>
-              <Text className="mb-2 text-base">Name</Text>
+          <View style={styles.formContainer}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Name</Text>
               <TextInput
                 value={name}
                 onChangeText={setName}
                 placeholder="Name"
-                className="rounded-md border border-gray-300 px-4 py-3"
+                style={styles.input}
               />
             </View>
 
-            <View>
-              <Text className="mb-2 text-base">Category</Text>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Category</Text>
               <TextInput
                 value={category}
                 onChangeText={setCategory}
                 placeholder="Category"
-                className="rounded-md border border-gray-300 px-4 py-3"
+                style={styles.input}
               />
             </View>
 
-            <View>
-              <Text className="mb-2 text-base">Price</Text>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Price</Text>
               <TextInput
                 value={price}
                 onChangeText={setPrice}
                 keyboardType="decimal-pad"
                 placeholder="Price"
-                className="rounded-md border border-gray-300 px-4 py-3"
+                style={styles.input}
               />
             </View>
 
-            <View>
-              <Text className="mb-2 text-base">Stock</Text>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Stock</Text>
               <TextInput
                 value={stock}
                 onChangeText={setStock}
                 keyboardType="number-pad"
                 placeholder="Stock"
-                className="rounded-md border border-gray-300 px-4 py-3"
+                style={styles.input}
               />
             </View>
 
-            <View>
-              <Text className="mb-2 text-base">Unit</Text>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Unit</Text>
               <TextInput
                 value={unit}
                 onChangeText={setUnit}
                 placeholder="Unit (e.g. kg, pcs)"
-                className="rounded-md border border-gray-300 px-4 py-3"
+                style={styles.input}
               />
             </View>
           </View>
 
-          <View className="mt-6 flex-row gap-3">
+          <View style={styles.buttonRow}>
             <PrimaryButton title="Add" onPress={onAdd} testID="btn-add-product" />
             <PrimaryButton
               title="Cancel"
-              className="bg-gray-500"
+              className="bg-gray"
               onPress={() => navigation.goBack()}
               testID="btn-cancel"
             />
